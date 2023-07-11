@@ -16,7 +16,7 @@ export default function CustomText({
   
   return (
     <Text
-      style={[styles.text,...style]}>
+      style={{...styles.text,...style}}>
       {children}
     </Text>
   );
