@@ -23,7 +23,7 @@ export default function CustomText({
 }
 const styles= StyleSheet.create({
     text: {
-      color:colors.DARK_01,
+      color:colors.BLUESTONE,
       fontSize:12
     },
 })

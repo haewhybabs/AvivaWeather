@@ -4,10 +4,21 @@ const colors = {
     SECONDARY:"#FBE264",
     PRIMARY_MIX_02:'#4E1CE5',
     PRIMARY_MIX_03:'#4250EE',
+    PRIMARY_TEXT:'#4F4AED',
     WHITE:"#FFFFFF",
     GRAY94:'#F0F0F0',
     LIGHTGRAY:"#D3D3D3",
-    BLACK:"#000000"
+    BLACK:"#000000",
+    LIGHT_01:'#E4F1FB',
+    LIGHT_02:'#E3F1EF',
+    SKYBLUE_01:'#7089F6',
+    LIGHTBLUE_01:'#B5D0FA',
+    LIGHTBLUE_02:'#7EB6FF',
+    SKYBLUE_02:'#5D7DE4',
+    SKYBLUE_03:'#668af1',
+    SKYBLUE_04:'#B1CFF9',
+    BLUESTONE:'#50729F'
+    
 };
 export default colors;
   

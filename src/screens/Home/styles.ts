@@ -1,8 +1,148 @@
 import { StyleSheet } from "react-native";
-import { screenHeight } from "../../constants/dimension";
+import { screenHeight, screenWidth } from "../../constants/dimension";
 import colors from "../../constants/colors";
 export const styles = StyleSheet.create({
     container:{
         flex:1,
+        backgroundColor:colors.LIGHT_01
     },
+    headerContentWrapper:{
+        flexDirection:'row',
+        justifyContent:'center'
+    },
+    headerText:{
+        fontSize:19,
+        color:colors.PRIMARY_TEXT,
+        fontWeight:'600',
+        paddingLeft:6
+    },
+    headerLocationIcon:{
+        width:19,
+        height:19,
+        resizeMode:'contain'
+    },
+    headerSubText:{
+        fontSize:10,
+        textAlign:'center',
+        paddingVertical:5
+    },
+    headerCard:{
+        padding:15,
+        width:screenWidth(55),
+        borderRadius:20,
+        alignSelf:'center',
+        height:200,
+        marginTop:20
+    },
+    degreeWrapper:{
+        alignItems:'flex-end',
+    },
+    degreeContainer:{
+        backgroundColor:colors.LIGHT_02,
+        height:30,
+        width:30,
+        borderRadius:50/2,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    degreeDot:{
+        backgroundColor:colors.PRIMARY_MIX,
+        height:14,
+        width:14,
+        borderRadius:14/2,
+
+    },
+    weatherMainText:{
+        fontSize:120,
+        alignSelf:'center',
+        fontWeight:'bold',
+        color:colors.LIGHT_02,
+        marginTop:-30
+    },
+    flexRow:{
+        flexDirection:'row'
+    },
+    contentRow:{
+        flexDirection:'row',
+        justifyContent:'space-between'
+    },
+    cloudImage:{
+        height:70,
+        width:70,
+        resizeMode:"contain",
+        marginTop:-30
+    },
+    cloudText:{
+        fontSize:17,
+        color:'#B5B5B5',
+        fontWeight:'600',
+        paddingLeft:7
+    },
+    cardWrapper:{
+        padding:20,
+        paddingHorizontal:40,
+        borderRadius:20,
+        flexDirection:'row',
+        justifyContent:'space-between'
+        
+    },
+    titleWrapper:{
+        padding:20,
+    },
+    icon:{
+        height:20,
+        width:20,
+        resizeMode:'contain',
+        paddingVertical:10
+    },
+    numberText:{
+        color:colors.PRIMARY_MIX_02,
+        fontSize:20,
+        fontWeight:'600',
+        paddingVertical:5
+    },
+    subText:{
+        color:colors.BLUESTONE,
+        fontWeight:'600'
+    },
+    alignCenter:{
+        alignItems:'center'
+    },
+    subText_02:{
+        fontSize:14,
+        fontWeight:'600'
+    },
+    subText_03:{
+        fontSize:14,
+        fontWeight:'600',
+        color:colors.PRIMARY_TEXT
+    },
+    scrollWrapper: {
+        flex: 1,
+        paddingLeft: 20,
+    },
+    timeWrapper:{
+        height:150,
+        width:80,
+        borderRadius:30,
+        backgroundColor:colors.SKYBLUE_04,
+        alignItems:'center',
+        padding:8,
+        paddingVertical:20,
+        marginRight:20,
+        flexDirection:'column',
+        justifyContent:'space-between'
+    },
+    subText_04:{
+        color:colors.WHITE,
+        fontSize:16,
+       
+        fontWeight:'600'
+    },
+    smallIcon:{
+        height:30,
+        width:30,
+        resizeMode:'contain',
+       
+    }
 })

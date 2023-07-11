@@ -14,10 +14,10 @@ export default function Splash({navigation,route}:SplashProps) {
   return (
     <LinearGradient
     style={styles.container}
-    colors={[colors.PRIMARY_MIX_02,colors.PRIMARY_MIX_03,colors.PRIMARY_MIX,]}
+    colors={[colors.PRIMARY_MIX_02,colors.PRIMARY_MIX,]}
     end={{ x: 0.5, y: 0.2 }}
     start={{ x: 0.5, y: 1 }}
-    locations={[0.2, 0.8,0.5]}
+    locations={[0.2, 0.8]}
   >
     <View style={styles.imageContainer}>
       <Image source={require('../../assets/images/cloud.png')} style={styles.imageWrapper}/>
