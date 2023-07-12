@@ -1,17 +1,25 @@
-import { View, Text,Image } from 'react-native'
-import React from 'react';
+import { View, Text,Image,Platform } from 'react-native'
+import React,{useEffect,useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../../constants/colors';
 import { styles } from './styles';
 import CustomText from '../../components/CustomText';
 import Button from '../../components/Button';
 import appIcons from '../../constants/icons';
+import Geolocation from '@react-native-community/geolocation';
+import Geocoder from 'react-native-geocoding';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchLocation } from '../../store/actions';
 interface SplashProps{
   route?:any
   navigation?:any
 }
 export default function Splash({navigation,route}:SplashProps) {
-
+  const location = useSelector((state: any) => state.stateContent);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    fetchLocation(dispatch)
+  }, [dispatch]);
   return (
     <LinearGradient
     style={styles.container}
