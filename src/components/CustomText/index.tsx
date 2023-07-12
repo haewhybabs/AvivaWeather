@@ -3,11 +3,8 @@ import {Text,StyleSheet} from "react-native";
 import colors from "../../constants/colors";
 
 interface TextsProps{
-  children?:any,
+  children?: React.ReactNode; 
   style?:any,
-  medium?:any,
-  bold?:any,
-  regular?:any
 }
 export default function CustomText({
   children,
@@ -23,7 +20,7 @@ export default function CustomText({
 }
 const styles= StyleSheet.create({
     text: {
-      color:colors.BLUESTONE,
+      color:colors.DARK_01,
       fontSize:12
     },
 })

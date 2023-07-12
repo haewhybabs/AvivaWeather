@@ -5,6 +5,7 @@ import colors from '../../constants/colors';
 import { styles } from './styles';
 import CustomText from '../../components/CustomText';
 import Button from '../../components/Button';
+import appIcons from '../../constants/icons';
 interface SplashProps{
   route?:any
   navigation?:any
@@ -20,7 +21,7 @@ export default function Splash({navigation,route}:SplashProps) {
     locations={[0.2, 0.8]}
   >
     <View style={styles.imageContainer}>
-      <Image source={require('../../assets/images/cloud.png')} style={styles.imageWrapper}/>
+      <Image source={appIcons.cloud.source} style={appIcons.cloud.style}/>
     </View>
 
     <View style={styles.bottomWrapper}>
