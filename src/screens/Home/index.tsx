@@ -6,18 +6,35 @@ import CustomText from '../../components/CustomText'
 import LinearGradient from 'react-native-linear-gradient'
 import ShadowView from '../../components/ShadowView'
 import appIcons from '../../constants/icons'
+import { useSelector, useDispatch } from 'react-redux';
+import { calculateTemp, renderOnlyTime, string15, windSpeedKm } from '../../constants/functions'
+
 interface HomeProps{
   route?:any
   navigation?:any
 }
 export default function Home({navigation,route}:HomeProps) {
+  const data = useSelector((state: any) => state.stateContent);
+  const dispatch = useDispatch();
+  const {city,country} = data?.locationData;
+  const weatherData =data?.weatherData;
+  const { main, wind, weather,rain, snow,hourlyTemperatures  } = weatherData;
+  const temperature = calculateTemp(main.temp);
+  const humidity = main.humidity;
+  const precipitation = rain ? rain['1h'] || 'N/A' : snow ? snow['1h'] || 'N/A' : 'N/A';
+  const windSpeed = windSpeedKm(wind.speed)
+  const weatherCondition = weather[0].description;
+
+
+
+  const hourlyData = Array.from({ length: 5 }, (_, index) => data.weatherHourlyData[index.toString()]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={colors.LIGHT_01}/>
       {/* Header */}
       <View style={styles.headerContentWrapper}>
         <Image source={appIcons.placeholder.source} style={appIcons.placeholder.style}/>
-        <CustomText style={styles.headerText}>London UK</CustomText>
+        <CustomText style={styles.headerText}>{string15(`${city}, ${country}`,20)}</CustomText>
       </View>
       <CustomText style={styles.headerSubText}>Monday 7th, January 2023</CustomText>
       {/* Content */}
@@ -37,11 +54,11 @@ export default function Home({navigation,route}:HomeProps) {
             </View>
 
             <View>
-              <CustomText style={styles.weatherMainText}>22</CustomText>
+              <CustomText style={styles.weatherMainText}>{temperature}</CustomText>
             </View>
             <View style={[styles.flexRow]}>
               <Image source={require('../../assets/images/clouds.png')} style={styles.cloudImage}/>
-              <CustomText style={styles.cloudText}>Mostly clear</CustomText>
+              <CustomText style={styles.cloudText}>{string15(weatherCondition,10)}</CustomText>
             </View>
 
           </LinearGradient>
@@ -51,19 +68,19 @@ export default function Home({navigation,route}:HomeProps) {
           <ShadowView style={styles.cardWrapper}>
             <View style={styles.alignCenter}>
               <Image source={appIcons.umbrella.source} style={appIcons.umbrella.style} />
-              <CustomText style={styles.numberText}>30%</CustomText>
+              <CustomText style={styles.numberText}>{precipitation}%</CustomText>
               <CustomText style={styles.subText}>Precipitation</CustomText>
             </View>
 
             <View style={styles.alignCenter}>
               <Image source={appIcons.humidity.source} style={appIcons.humidity.style} />
-              <CustomText style={styles.numberText}>20%</CustomText>
+              <CustomText style={styles.numberText}>{humidity}%</CustomText>
               <CustomText style={styles.subText}>Humidity</CustomText>
             </View>
 
             <View style={styles.alignCenter}>
               <Image source={appIcons.wind.source} style={appIcons.wind.style} />
-              <CustomText style={styles.numberText}>30Km/h</CustomText>
+              <CustomText style={styles.numberText}>{windSpeed}Km/h</CustomText>
               <CustomText style={styles.subText}>Wind</CustomText>
             </View>
           </ShadowView>
@@ -78,11 +95,16 @@ export default function Home({navigation,route}:HomeProps) {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           style={styles.scrollWrapper}>
-              <View style={styles.timeWrapper}>
-                <CustomText style={styles.subText_04}>9:00</CustomText>
-                <Image source={appIcons.clouds.source} style={appIcons.clouds.style} />
-                <CustomText style={styles.subText_04}>20°</CustomText>
-              </View>
+            {
+              hourlyData.map((item,index)=>(
+                <View style={styles.timeWrapper} key={index}>
+                  <CustomText style={styles.subText_04}>{renderOnlyTime(item.dt_txt)}</CustomText>
+                  <Image source={appIcons.clouds.source} style={appIcons.clouds.style} />
+                  <CustomText style={styles.subText_04}>{calculateTemp(item?.main?.temp)}°C</CustomText>
+                </View>
+              ))
+            }
+              
               <View style={styles.timeWrapper}>
                 <CustomText style={styles.subText_04}>10:00</CustomText>
                 <Image source={appIcons.sun.source} style={appIcons.sun.style} />

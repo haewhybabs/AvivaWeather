@@ -1,0 +1,2 @@
+export const GOOGLE_API_KEY= "AIzaSyD8AU07vIB4FoF6iiV5KSm_calvk6gx0Ug"
+export const OPEN_WEATHERAPI_KEY="222c9b5cd18f4050b485e1a7912f7097";
