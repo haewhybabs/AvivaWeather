@@ -37,7 +37,10 @@ const initialState= {
   requestHourlyLoading:false,
 
   weatherForecastData:{},
-  requestForecastLoading:false
+  requestForecastLoading:false,
+  errorData:{
+    isError:false
+  }
 };
 
 export default function weatherReducer(
@@ -75,7 +78,7 @@ export default function weatherReducer(
     case Actions.FETCH_WEATHER_HOURLY_SUCCESS:
       return {
         ...state,
-        weatherHourlyData: { ...action.payload },
+        weatherHourlyData: [ ...action.payload ],
         requestHourlyLoading:false
       };
     case Actions.FETCH_WEATHER_HOURLY_FAILURE:
@@ -140,6 +143,15 @@ export default function weatherReducer(
           error: action.error,
         },
       };
+    case Actions.UPDATE_ERROR_STATE:
+      return{
+        ...state,
+        errorData:{
+          isError:action.payload.status,
+          error:action.payload.error
+        }
+        
+      }
       
     default:
       return state;

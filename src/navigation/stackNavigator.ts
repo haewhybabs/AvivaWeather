@@ -1,6 +1,7 @@
 import Home from "../screens/Home";
 import Splash from '../screens/Splash';
 import Forecast from '../screens/Forecast';
+import SearchPage from "../screens/SearchPage";
 
 
 export const WelcomeStack = 
@@ -20,5 +21,9 @@ export const AppStack =
   {
     screen:Forecast,
     name:"Forecast"
+  },
+  {
+    screen:SearchPage,
+    name:"SearchPage"
   }
 ]

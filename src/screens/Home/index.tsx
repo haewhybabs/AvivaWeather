@@ -1,4 +1,4 @@
-import { View, Text,SafeAreaView,StatusBar,Image, TouchableOpacity,ScrollView } from 'react-native'
+import { View, Text,SafeAreaView,StatusBar,Image, TouchableOpacity,ScrollView,ActivityIndicator } from 'react-native'
 import React from 'react'
 import colors from '../../constants/colors'
 import { styles } from './styles'
@@ -7,7 +7,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import ShadowView from '../../components/ShadowView'
 import appIcons from '../../constants/icons'
 import { useSelector, useDispatch } from 'react-redux';
-import { calculateTemp, renderOnlyTime, string15, windSpeedKm } from '../../constants/functions'
+import { calculateTemp, detectCloud, formatedDate, renderOnlyTime, string15, windSpeedKm } from '../../constants/functions'
 
 interface HomeProps{
   route?:any
@@ -16,28 +16,38 @@ interface HomeProps{
 export default function Home({navigation,route}:HomeProps) {
   const data = useSelector((state: any) => state.stateContent);
   const dispatch = useDispatch();
-  const {city,country} = data?.locationData;
+  const {city,country,address} = data?.locationData;
   const weatherData =data?.weatherData;
   const { main, wind, weather,rain, snow,hourlyTemperatures  } = weatherData;
-  const temperature = calculateTemp(main.temp);
-  const humidity = main.humidity;
+  const temperature = calculateTemp(main?.temp||0);
+  const humidity = main?.humidity;
   const precipitation = rain ? rain['1h'] || 'N/A' : snow ? snow['1h'] || 'N/A' : 'N/A';
-  const windSpeed = windSpeedKm(wind.speed)
-  const weatherCondition = weather[0].description;
-
-
-
-  const hourlyData = Array.from({ length: 5 }, (_, index) => data.weatherHourlyData[index.toString()]);
+  const windSpeed = windSpeedKm(wind?.speed)
+  const weatherCondition = weather && weather.length > 0 ? weather[0]?.description || '' : '';
+  const hourlyData = data.weatherHourlyData || [];
+  const handleSearch =() =>{
+    navigation.navigate('SearchPage')
+  }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={colors.LIGHT_01}/>
       {/* Header */}
-      <View style={styles.headerContentWrapper}>
-        <Image source={appIcons.placeholder.source} style={appIcons.placeholder.style}/>
-        <CustomText style={styles.headerText}>{string15(`${city}, ${country}`,20)}</CustomText>
+      <View style={styles.headerWrapper}>
+        <View />
+        <View style={styles.headerContentWrapper}>
+          <Image source={appIcons.placeholder.source} style={appIcons.placeholder.style}/>
+          <CustomText style={styles.headerText}>{ city ||country ?string15(`${city}, ${country}`,20):string15(address,20)}</CustomText>
+        </View>
+
+        <TouchableOpacity style={styles.searchCover} onPress={handleSearch}>
+          <Image source={appIcons.zoom.source} style={appIcons.zoom.style} />
+        </TouchableOpacity>
       </View>
-      <CustomText style={styles.headerSubText}>Monday 7th, January 2023</CustomText>
+      <CustomText style={styles.headerSubText}>{formatedDate()}</CustomText>
       {/* Content */}
+      <View>
+          {data?.requestLoading? <ActivityIndicator/> : null}
+        </View>
       <ScrollView showsVerticalScrollIndicator={false}>
 
         <View>
@@ -54,7 +64,7 @@ export default function Home({navigation,route}:HomeProps) {
             </View>
 
             <View>
-              <CustomText style={styles.weatherMainText}>{temperature}</CustomText>
+              <CustomText style={styles.weatherMainText}>{temperature || 0}</CustomText>
             </View>
             <View style={[styles.flexRow]}>
               <Image source={require('../../assets/images/clouds.png')} style={styles.cloudImage}/>
@@ -68,7 +78,7 @@ export default function Home({navigation,route}:HomeProps) {
           <ShadowView style={styles.cardWrapper}>
             <View style={styles.alignCenter}>
               <Image source={appIcons.umbrella.source} style={appIcons.umbrella.style} />
-              <CustomText style={styles.numberText}>{precipitation}%</CustomText>
+              <CustomText style={styles.numberText}>{precipitation}</CustomText>
               <CustomText style={styles.subText}>Precipitation</CustomText>
             </View>
 
@@ -95,40 +105,24 @@ export default function Home({navigation,route}:HomeProps) {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           style={styles.scrollWrapper}>
-            {
-              hourlyData.map((item,index)=>(
+           {hourlyData && hourlyData.length > 0 ? (
+              hourlyData.map((item: any, index: number) => (
                 <View style={styles.timeWrapper} key={index}>
                   <CustomText style={styles.subText_04}>{renderOnlyTime(item.dt_txt)}</CustomText>
-                  <Image source={appIcons.clouds.source} style={appIcons.clouds.style} />
+                  <Image
+                    source={detectCloud(item?.weather[0]?.id) ? appIcons.clouds.source : appIcons.sun.source}
+                    style={appIcons.clouds.style}
+                  />
                   <CustomText style={styles.subText_04}>{calculateTemp(item?.main?.temp)}°C</CustomText>
                 </View>
               ))
-            }
-              
-              <View style={styles.timeWrapper}>
-                <CustomText style={styles.subText_04}>10:00</CustomText>
-                <Image source={appIcons.sun.source} style={appIcons.sun.style} />
-                <CustomText style={styles.subText_04}>20°</CustomText>
+            ) : (
+              <View>
+                {/* Render a fallback UI when hourlyData is empty or null */}
+                <CustomText>No hourly data available</CustomText>
               </View>
-              <View style={styles.timeWrapper}>
-                <CustomText style={styles.subText_04}>9:00</CustomText>
-                <Image source={appIcons.clouds.source} style={appIcons.clouds.style} />
-                <CustomText style={styles.subText_04}>20°</CustomText>
-              </View>
-              <View style={styles.timeWrapper}>
-                <CustomText style={styles.subText_04}>10:00</CustomText>
-                <Image source={appIcons.sun.source} style={appIcons.sun.style} />
-                <CustomText style={styles.subText_04}>20°</CustomText>
-              </View><View style={styles.timeWrapper}>
-                <CustomText style={styles.subText_04}>9:00</CustomText>
-                <Image source={appIcons.clouds.source} style={appIcons.clouds.style} />
-                <CustomText style={styles.subText_04}>20°</CustomText>
-              </View>
-              <View style={styles.timeWrapper}>
-                <CustomText style={styles.subText_04}>10:00</CustomText>
-                <Image source={appIcons.sun.source} style={appIcons.sun.style} />
-                <CustomText style={styles.subText_04}>20°</CustomText>
-              </View>
+            )}
+
         </ScrollView>
       </ScrollView>
   

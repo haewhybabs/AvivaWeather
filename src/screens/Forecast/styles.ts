@@ -35,6 +35,17 @@ export const styles = StyleSheet.create({
         fontSize:15,
         fontWeight:'600'
     },
+    subText_02:{
+        fontSize:13,
+        fontWeight:'600',
+        
+    },
+    subText_03:{
+        fontSize:13,
+        fontWeight:'600',
+        marginLeft:10
+        
+    },
     headerActionText:{
         fontSize:48,
         paddingVertical:10,
@@ -45,6 +56,10 @@ export const styles = StyleSheet.create({
     rowWrapper:{
         flexDirection:'row',
         justifyContent:'space-around'
+    },
+    rowBetween:{
+        flexDirection:'row',
+        justifyContent:'space-between'
     },
     cardWrapper:{
         paddingVertical:20,
@@ -77,5 +92,17 @@ export const styles = StyleSheet.create({
     },
     lineBreak:{
         marginTop:100
+    },
+    spacing:{
+        marginHorizontal:10
+    },
+    topPadding:{
+        paddingVertical:20
+    },
+    pushImageUp:{
+        marginTop:-7
+    },
+    averageWidth:{
+        width:'33.3%'
     }
 })

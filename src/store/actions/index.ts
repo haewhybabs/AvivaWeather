@@ -20,7 +20,7 @@ export const FETCH_WEATHER_HOURLY_REQUEST = 'FETCH_WEATHER_HOURLY_REQUEST';
 export const FETCH_WEATHER_FORECAST_SUCCESS = 'FETCH_WEATHER_FORECAST_SUCCESS';
 export const FETCH_WEATHER_FORECAST_FAILURE = 'FETCH_WEATHER_FORECAST_FAILURE';
 export const FETCH_WEATHER_FORECAST_REQUEST = 'FETCH_WEATHER_FORECAST_REQUEST';
-
+export const UPDATE_ERROR_STATE='UPDATE_ERROR_STATE';
 export const fetchLocation = (dispatch:Dispatch) =>{
     Geocoder.init(GOOGLE_API_KEY); 
     dispatch({ type: FETCH_LOCATION_REQUEST });
@@ -62,13 +62,19 @@ export const fetchLocation = (dispatch:Dispatch) =>{
             fetchForecastWeather(latitude,longitude,dispatch)
         }
         } catch (error) {
-        console.error('Error getting location details:', error);
-        // Handle error and show an appropriate error message
+          dispatch({
+            type:UPDATE_ERROR_STATE,
+            payload:{error,status:true}
+          })
         }
     },
     error => {
         console.error('Error getting current location:', error);
         dispatch({ type: FETCH_LOCATION_FAILURE, payload: error.message });
+        dispatch({
+            type:UPDATE_ERROR_STATE,
+            payload:{error:error.message,status:true}
+        })
     },
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
@@ -87,6 +93,10 @@ export const fetchWeather = async(
         dispatch({ type: FETCH_WEATHER_SUCCESS, payload: response });
       } catch (error:any) {
         dispatch({ type: FETCH_WEATHER_FAILURE, error: error.message });
+        dispatch({
+          type:UPDATE_ERROR_STATE,
+          payload:{error:error.message,status:true}
+        })
       }
     ;
 };
@@ -116,20 +126,67 @@ export const fetchForecastWeather = async(
     dispatch({ type: FETCH_WEATHER_REQUEST });
     try {
       const response = await getForecastWeatherByCoordinates(latitude, longitude);
-      const specificHours = ['09:00:00', '10:00:00', '11:00:00','12:00:00','13:00:00']; // Specify the desired hours
+      const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
       const filteredWeatherData = response.list.filter((item:any) => {
-        const hour = item.dt_txt.split(' ')[1];
-        return specificHours.includes(hour);
+        const dateTime = item.dt_txt.split(' ');
+        const date = dateTime[0];
+        const hour = dateTime[1];
+  
+        return date === currentDate;
       });
-      
       dispatch({ type: FETCH_WEATHER_FORECAST_SUCCESS, payload: response });
-      //This is just to beautify the UI on the frontend, incorrect data.
       dispatch({ type: FETCH_WEATHER_HOURLY_SUCCESS, payload: filteredWeatherData});
     } catch (error:any) {
       dispatch({ type: FETCH_WEATHER_FORECAST_FAILURE, error: error.message });
+      dispatch({
+        type:UPDATE_ERROR_STATE,
+        payload:{error:error.message,status:true}
+      })
     }
   ;
 };
+
+export const updateAddress = async(details:any,data:any,dispatch:Dispatch,callback: () => void)=>{
+  dispatch({ type: FETCH_WEATHER_REQUEST });
+  const { description } = data;
+    const { formatted_address, geometry } = details;
+    const { lat, lng } = geometry.location;
+    let city = '';
+    let country = '';
+    let fullAddress='';
+
+    // Extract city and country from the formatted address
+    const addressComponents = formatted_address.split(', ');
+    if (addressComponents.length >= 3) {
+      city = addressComponents[addressComponents.length - 3];
+      country = addressComponents[addressComponents.length - 1];
+    }
+
+    if (addressComponents.length > 0) {
+      fullAddress = addressComponents.join(', ');
+    }
+
+    dispatch({
+      type: FETCH_LOCATION_SUCCESS,
+      payload: { latitude:lat, longitude:lng, city:city, country:country, address:fullAddress },
+    });
+    await Promise.all([
+      fetchWeather(lat, lng, dispatch),
+      fetchForecastWeather(lat, lng, dispatch),
+    ]);
+    callback();
+    
+}
+
+export const clearError = (dispatch:Dispatch) =>{
+  dispatch({
+    type:UPDATE_ERROR_STATE,
+    payload:{
+      status:false,
+      error:''
+    }
+  })
+}
   
   
   

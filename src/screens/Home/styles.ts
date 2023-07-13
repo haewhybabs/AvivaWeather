@@ -8,7 +8,12 @@ export const styles = StyleSheet.create({
     },
     headerContentWrapper:{
         flexDirection:'row',
-        justifyContent:'center'
+        paddingLeft:20
+        // justifyContent:'center'
+    },
+    headerWrapper:{
+        flexDirection:'row',
+        justifyContent:'space-between'
     },
     headerText:{
         fontSize:19,
@@ -144,5 +149,8 @@ export const styles = StyleSheet.create({
         width:30,
         resizeMode:'contain',
        
+    },
+    searchCover:{
+        paddingRight:15
     }
 })

@@ -33,6 +33,22 @@ interface AppIcons {
   placeholder:{
     source:ImageSourcePropType;
     style:ImageStyle;
+  };
+  zoom:{
+    source:ImageSourcePropType;
+    style:ImageStyle;
+  }
+  cheveronLeft:{
+    source:ImageSourcePropType;
+    style:ImageStyle;
+  }
+  cheveronRight:{
+    source:ImageSourcePropType;
+    style:ImageStyle;
+  }
+  close:{
+    source:ImageSourcePropType;
+    style:ImageStyle;
   }
 }
 const styles= StyleSheet.create({
@@ -56,6 +72,16 @@ const styles= StyleSheet.create({
         width:19,
         height:19,
         resizeMode:'contain'
+    },
+    zoom:{
+      width:30,
+      height:30,
+      resizeMode:'contain',
+    },
+    cheveron:{
+      width:25,
+      height:25,
+      resizeMode:'contain',
     }
 })
 
@@ -92,6 +118,22 @@ const appIcons: AppIcons = {
     source:require('../assets/images/placeholder.png'),
     style:styles.placeholder
   },
+  zoom:{
+    source:require('../assets/images/zoom.png'),
+    style:styles.zoom
+  },
+  cheveronLeft:{
+    source:require('../assets/images/left-cheveron-dark.png'),
+    style:styles.cheveron
+  },
+  cheveronRight:{
+    source:require('../assets/images/right-cheveron-dark.png'),
+    style:styles.cheveron
+  },
+  close:{
+    source:require('../assets/images/close.png'),
+    style:styles.cheveron
+  }
 };
 
 
