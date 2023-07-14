@@ -76,8 +76,6 @@ export const fetchLocation = async (dispatch: Dispatch) => {
             }
           }
 
-          console.log('got here');
-
           dispatch({
             type: FETCH_LOCATION_SUCCESS,
             payload: {
