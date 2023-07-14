@@ -62,7 +62,7 @@ export default function Forecast({navigation,route}:ForecastProps) {
           <CustomText style={styles.subText_03}>{description}</CustomText>
         </View>
         <View>
-          <CustomText style={styles.subText_03}>{calculateTemp(temperature)}</CustomText>
+          <CustomText style={styles.subText_03}>{calculateTemp(temperature)}°</CustomText>
         </View>
       </View>
     );

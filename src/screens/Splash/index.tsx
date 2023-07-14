@@ -6,10 +6,8 @@ import { styles } from './styles';
 import CustomText from '../../components/CustomText';
 import Button from '../../components/Button';
 import appIcons from '../../constants/icons';
-import Geolocation from '@react-native-community/geolocation';
-import Geocoder from 'react-native-geocoding';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchLocation } from '../../store/actions';
+import { fetchLocation, requestLocationPermission } from '../../store/actions';
 interface SplashProps{
   route?:any
   navigation?:any

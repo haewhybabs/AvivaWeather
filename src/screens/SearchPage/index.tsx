@@ -5,6 +5,7 @@ import SearchBar from '../../components/SearchBar';
 import Divider from '../../components/Divider';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateAddress } from '../../store/actions';
+import colors from '../../constants/colors';
 interface SearchPageProps{
   route?:any
   navigation?:any
@@ -51,6 +52,7 @@ export default SearchPage;
 
 const styles = StyleSheet.create({
   container:{
-
-  }
+    flex:1,
+    backgroundColor:colors.LIGHT_01
+},
 })

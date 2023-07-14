@@ -40,7 +40,7 @@ const initialState= {
   requestForecastLoading:false,
   errorData:{
     isError:false
-  }
+  },
 };
 
 export default function weatherReducer(

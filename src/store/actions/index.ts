@@ -1,5 +1,5 @@
-import { Platform } from 'react-native';
-import Geolocation ,{ GeolocationOptions } from '@react-native-community/geolocation';
+import { Platform,PermissionsAndroid } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
 import { Dispatch } from 'redux';
 import { GOOGLE_API_KEY } from '../../config';
@@ -21,65 +21,96 @@ export const FETCH_WEATHER_FORECAST_SUCCESS = 'FETCH_WEATHER_FORECAST_SUCCESS';
 export const FETCH_WEATHER_FORECAST_FAILURE = 'FETCH_WEATHER_FORECAST_FAILURE';
 export const FETCH_WEATHER_FORECAST_REQUEST = 'FETCH_WEATHER_FORECAST_REQUEST';
 export const UPDATE_ERROR_STATE='UPDATE_ERROR_STATE';
-export const fetchLocation = (dispatch:Dispatch) =>{
-    Geocoder.init(GOOGLE_API_KEY); 
-    dispatch({ type: FETCH_LOCATION_REQUEST });
 
-    if (Platform.OS === 'android') {
-        Geolocation.requestAuthorization();
-        }
-        // Get current location
-    Geolocation.getCurrentPosition(
+export async function requestLocationPermission() {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'Location Permission',
+        message: 'This app requires access to your location.',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      return true
+    } else {
+      return false
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
+export const fetchLocation = async (dispatch: Dispatch) => {
+  Geocoder.init(GOOGLE_API_KEY);
+  dispatch({ type: FETCH_LOCATION_REQUEST });
+
+  if (Platform.OS === 'ios') {
+    await Geolocation.requestAuthorization('whenInUse');
+  }
+  else{
+    await requestLocationPermission();
+  }
+
+  Geolocation.getCurrentPosition(
+    
     async position => {
-        const { latitude, longitude } = position.coords;
-        
-        try {
+      const { latitude, longitude } = position.coords;
+
+      try {
         const response = await Geocoder.from(latitude, longitude);
         const { results } = response;
 
         if (results.length > 0) {
-            const { address_components } = results[0];
-            let city = '';
-            let country = '';
+          const { address_components } = results[0];
+          let city = '';
+          let country = '';
 
-            for (const component of address_components) {
-                if (component.types.includes('locality')) {
-                  city = component.long_name;
-                }
-                if (component.types.includes('country')) {
-                  country = component.long_name;
-                }
+          for (const component of address_components) {
+            if (component.types.includes('locality')) {
+              city = component.long_name;
             }
-           
-            dispatch({
-                type: FETCH_LOCATION_SUCCESS,
-                payload: { latitude, longitude, city, country, address:results[0].formatted_address },
-            });
+            if (component.types.includes('country')) {
+              country = component.long_name;
+            }
+          }
 
-            //Fetch the weather with the data obtained
+          console.log('got here');
 
-            fetchWeather(latitude,longitude,dispatch)
-            fetchForecastWeather(latitude,longitude,dispatch)
-        }
-        } catch (error) {
           dispatch({
-            type:UPDATE_ERROR_STATE,
-            payload:{error,status:true}
-          })
+            type: FETCH_LOCATION_SUCCESS,
+            payload: {
+              latitude,
+              longitude,
+              city,
+              country,
+              address: results[0].formatted_address
+            }
+          });
+
+          // Fetch the weather with the data obtained
+          fetchWeather(latitude, longitude, dispatch);
+          fetchForecastWeather(latitude, longitude, dispatch);
         }
+      } catch (error) {
+        dispatch({
+          type: UPDATE_ERROR_STATE,
+          payload: { error, status: true }
+        });
+      }
     },
     error => {
-        console.error('Error getting current location:', error);
-        dispatch({ type: FETCH_LOCATION_FAILURE, payload: error.message });
-        dispatch({
-            type:UPDATE_ERROR_STATE,
-            payload:{error:error.message,status:true}
-        })
+      console.error('Error getting current location:', error);
+      dispatch({ type: FETCH_LOCATION_FAILURE, payload: error.message });
+      dispatch({
+        type: UPDATE_ERROR_STATE,
+        payload: { error: error.message, status: true }
+      });
     },
-    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-   
-}
+    { enableHighAccuracy: false, timeout: 15000,maximumAge:1000 }
+  );
+};
 
 export const fetchWeather = async(
     latitude: number,

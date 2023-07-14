@@ -15,7 +15,6 @@ interface HomeProps{
 }
 export default function Home({navigation,route}:HomeProps) {
   const data = useSelector((state: any) => state.stateContent);
-  const dispatch = useDispatch();
   const {city,country,address} = data?.locationData;
   const weatherData =data?.weatherData;
   const { main, wind, weather,rain, snow,hourlyTemperatures  } = weatherData;
@@ -44,10 +43,8 @@ export default function Home({navigation,route}:HomeProps) {
         </TouchableOpacity>
       </View>
       <CustomText style={styles.headerSubText}>{formatedDate()}</CustomText>
-      {/* Content */}
-      <View>
-          {data?.requestLoading? <ActivityIndicator/> : null}
-        </View>
+      {data?.requestLoading || data?.locationData.loading? <ActivityIndicator/> 
+      : 
       <ScrollView showsVerticalScrollIndicator={false}>
 
         <View>
@@ -113,7 +110,7 @@ export default function Home({navigation,route}:HomeProps) {
                     source={detectCloud(item?.weather[0]?.id) ? appIcons.clouds.source : appIcons.sun.source}
                     style={appIcons.clouds.style}
                   />
-                  <CustomText style={styles.subText_04}>{calculateTemp(item?.main?.temp)}°C</CustomText>
+                  <CustomText style={styles.subText_04}>{calculateTemp(item?.main?.temp)}°</CustomText>
                 </View>
               ))
             ) : (
@@ -125,6 +122,7 @@ export default function Home({navigation,route}:HomeProps) {
 
         </ScrollView>
       </ScrollView>
+      }
   
     </SafeAreaView>
   )
